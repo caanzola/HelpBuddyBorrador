@@ -1,9 +1,9 @@
 import assert from "assert";
 
-describe("healp-buddy", function () {
+describe("cuatro-en-linea", function () {
   it("package.json has correct name", async function () {
     const { name } = await import("../package.json");
-    assert.strictEqual(name, "healp-buddy");
+    assert.strictEqual(name, "cuatro-en-linea");
   });
 
   if (Meteor.isClient) {
