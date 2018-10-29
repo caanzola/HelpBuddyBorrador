@@ -8,6 +8,8 @@ import PropTypes from "prop-types";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Registro from './sesionusuario/Registro.js';
+import SolicitudA from './ayuda/SolicitudA.js';
+import OfertaA from './ayuda/OfertaA.js';
 import IniciarSesion from './sesionusuario/IniciarSesion.js';
 import TableroSolicitudes from './TableroSolicitudes.js';
 
@@ -21,12 +23,21 @@ class App extends Component {
       loggeado:false,
       correo:"",
       nickname:"",
+      solicitarAyuda:false
     };
     this.iniciarSesion = this.iniciarSesion.bind(this);
     this.registrarse = this.registrarse.bind(this);
     this.loged = this.loged.bind(this);
     this.cerrarSesion = this.cerrarSesion.bind(this);
+    this.solicitarAyuda = this.solicitarAyuda.bind(this);
+    this.atras= this.atras.bind(this);
   }
+  solicitarAyuda(){
+    this.setState({
+      solicitarAyuda:true
+    });
+  }
+
 cerrarSesion(){
   this.setState({registro:false,login:false,loggeado:false,correo:"",nickname:""});
 }
@@ -38,6 +49,10 @@ iniciarSesion()
 {
   this.setState({login:true});
 }
+
+atras(atras){
+    this.setState({registro:false, login:false});
+  }
 
 renderBtnSesion()
 {
@@ -59,7 +74,7 @@ renderBtnSesion()
     <a>{this.state.nickname}</a>
     <p></p>
     <p></p>
-    <button type="button" className="btnReg" onClick={this.cerrarSesion}>Cerrar Sesión</button>
+    <button type="button" className="btnCerrarSesion" onClick={this.cerrarSesion}>Cerrar Sesión</button>
   </div>
 
     );
@@ -75,13 +90,14 @@ loged(bol,correo,nickname){
 }
 showContent()
 {
+  let nickname = this.state.nickname;
   if(this.state.loggeado)
   {
     return(<div>
       <br/>
       <br/>
       <br/>
-                <TableroSolicitudes/>
+      <TableroSolicitudes nickname={nickname}/>
       </div>);
   }
   else
@@ -89,13 +105,14 @@ showContent()
     let registro = this.state.registro;
     let login = this.state.login;
     let loggeado = this.state.loggeado;
+    let nickname = this.state.nickname;
     if(registro &&!loggeado)
     {
       return(
         <div>
-        <br/>
-        <br/>
-          <Registro loged={this.loged}/>
+          <br/>
+          <br/>
+          <Registro loged={this.loged} atras={this.atras}/>
           <br/>
           <br/>
         </div>);
@@ -105,48 +122,51 @@ showContent()
         <div>
         <br/>
         <br/>
-        <IniciarSesion loged={this.loged}/>
+        <IniciarSesion loged={this.loged} atras={this.atras}/>
           <br/>
           <br/>
         </div>
       );
     }
     else{
+      return(
+        <div>
+          <div className="carrusel">
+            <br/>
+            <br/>
+            <br/>
+            <table className="table">
+              <tbody>
+                <tr>
+                  <td>
+                  <Carousel autoPlay={true} showThumbs={false} infiniteLoop={true} width={"800px"} transitionTime={1500} interval={7000}>
+                    <div>
+                      <img src="/1.jpg" />
+                    </div>
+                    <div>
+                      <img src="/2.jpg"></img>
+                    </div>
+                    <div>
+                      <img src="/3.jpg"></img>
+                    </div>
+                  </Carousel>
+                  </td>
+                  <td>
+                    <h3>
+                    ¿Necesitas ayuda? <br/>Estás en el lugar indicado <br/><br/>
+                    ¿Te gusta ayudar? <br/>También acá puedes hacerlo y hasta recibir una remuneración
+                    por ello<br/><br/><br/>
+                    Regístrate y únete al progreso porque todos necesitamos la ayuda de alguien
+                    y todos podemos cooperar en algo
+                    </h3>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-      return(<div className="carrusel">
-
-      <br/>
-      <br/>
-      <br/>
-      <table className="table">
-      <tbody>
-        <tr>
-          <td>
-             <Carousel autoPlay={true} showThumbs={false} infiniteLoop={true} width={"800px"} transitionTime={1500} interval={7000}>
-                <div>
-                    <img src="/1.jpg" />
-                </div>
-                <div>
-                    <img src="/2.jpg"></img>
-                </div>
-                <div>
-                    <img src="/3.jpg"></img>
-                </div>
-            </Carousel>
-          </td>
-              <td>
-                  <h3>
-                  ¿Necesitas ayuda? <br/>Estás en el lugar indicado <br/><br/>
-                  ¿Te gusta ayudar? <br/>También acá puedes hacerlo y hasta recibir una remuneración
-                  por ello<br/><br/><br/>
-                  Regístrate y únete al progreso porque todos necesitamos la ayuda de alguien
-                  y todos podemos cooperar en algo
-                  </h3>
-             </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>);
+  );
     }
   }
 
@@ -157,9 +177,9 @@ showContent()
       <div>
            <nav className="barra">
                <a> <img className="q" src="/q.png" alt="help buddy icon"/> Help Buddy </a>
-                 
+
                      {this.renderBtnSesion()}
-                 
+
            </nav>
            <br />
            <br />

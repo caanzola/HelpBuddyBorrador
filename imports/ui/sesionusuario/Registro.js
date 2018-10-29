@@ -19,14 +19,15 @@ class Registro extends Component {
       correo: "",
       clave:"",
       repetirClave:"",
-      nickname:""
+      nickname:"",
+      error:""
     };
     this.handleChangeName=this.handleChangeName.bind(this);
     this.handleChangeCorreo=this.handleChangeCorreo.bind(this);
     this.handleChangeClave=this.handleChangeClave.bind(this);
     this.handleChangeRClave=this.handleChangeRClave.bind(this);
     this.listo=this.listo.bind(this);
-    this.back=this.back.bind(this);
+    this.atras=this.atras.bind(this);
   }
 handleChangeName(event){
   this.setState({nombre: event.target.value},()=>{
@@ -42,9 +43,9 @@ handleChangeClave(event){
 handleChangeRClave(event){
   this.setState({repetirClave: event.target.value});
 }
-back(){
-  window.location.reload();
-}
+atras(){
+    this.props.atras(true);
+  }
 
 listo(){
   let {
@@ -53,21 +54,30 @@ listo(){
     clave,
     repetirClave,
   }=this.state;
+  let msg="";
   console.log(nombre,correo,clave,repetirClave);
   if(nombre===""){
-    alert("Se requiere el nombre");
-  }
+    msg="Se requiere el nombre";
+    this.setState({error:msg});
+    }
   else if(correo===""){
-    alert("Se requiere el correo");
-  }
+    msg=("Se requiere el correo");
+    this.setState({error:msg});
+    }
   else if(clave===""){
-    alert("Se requiere clave");
-  }
+    msg=("Se requiere clave");
+    this.setState({error:msg});
+    }
   else if(clave!=repetirClave){
-    alert("la clave debe coincidir");
-  }
+    msg="la clave debe coincidir";
+    this.setState({error:msg});
+    }
+  else if(!correo.includes(".com") || (!correo.includes("@") &&!corre.includes(".co"))){
+    msg=("Ingrese un correo valido");
+    this.setState({error:msg});
+    }
   else {
-    //trata de iniciar sesion
+    //trata de registar al usuario
     var randomAnimal = Math.floor(Math.random() * 15);
     var randomNumber = Math.floor(Math.random() * 15);
     var randomAction = Math.floor(Math.random() * 15);
@@ -79,7 +89,20 @@ listo(){
         Meteor.call("usuarios.add",nombre,correo,nickname,ciphertext,(err,res)=>{if(res==="success"){
           this.loged(correo,nickname);
         }else{
-          console.log("ERROR AL GUARDAR");
+          var randomAnimal = Math.floor(Math.random() * 15);
+          var randomNumber = Math.floor(Math.random() * 15);
+          var randomAction = Math.floor(Math.random() * 15);
+          let nickname =animals[randomAnimal]+numbers[randomNumber]+action[randomAction];
+          console.log("Ya existe nickname");
+          Meteor.call("usuarios.add",nombre,correo,nickname,ciphertext,(err,res)=>{if(res==="success"){
+            this.loged(correo,nickname);
+          }else{
+            var randomAnimal = Math.floor(Math.random() * 15);
+            var randomNumber = Math.floor(Math.random() * 15);
+            var randomAction = Math.floor(Math.random() * 15);
+            let nickname =animals[randomAnimal]+numbers[randomNumber]+action[randomAction];
+            console.log("Ya existe nickname");
+          } });
         } });
       }
       console.log(user);
@@ -91,9 +114,18 @@ listo(){
 loged(correo,nickname){
   this.props.loged(true,correo,nickname);
 }
+renderError(error){
+  let err= error;
+  if(err){
+    return (<h2 className="errorMsg">{err}</h2>);
+  }
+  else{
+    return null;
+  }
+}
   render() {
     const divStyle = {
-    width: "80%",
+    width: "40%",
     margin: "auto",
       borderStyle: "solid",
     borderWidth: "2px",
@@ -110,36 +142,34 @@ let {
   correo,
   clave,
   repetirClave,
+  error
 }=this.state;
     return (
       <div style={divStyle}>
-
+{this.renderError(error)}
 <div style={w}>
       <br/>
         <form>
           <div className="form-group">
-            <label htmlFor="formGroupExampleInput">Nombres: </label>
+            <label htmlFor="formGroupExampleInput" className="letra">Nombre y apellido: </label>
             <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Nombre y Apellido" value={nombre} onChange={this.handleChangeName}/>
           </div>
-          <br/>
           <div className="form-group">
-            <label htmlFor="formGroupExampleInput2">Correo: </label>
-            <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="correo@correo.com"value={correo} onChange={this.handleChangeCorreo}/>
+            <label htmlFor="formGroupExampleInput2" className="letra">Correo: </label>
+            <input type="email" className="form-control" id="formGroupExampleInput2" placeholder="correo@correo.com"value={correo} onChange={this.handleChangeCorreo}/>
           </div>
-          <br/>
           <div className="form-group">
-            <label htmlFor="formGroupExampleInput4">Clave: </label>
-            <input type="password" className="form-control" id="formGroupExampleInput4" placeholder="Clave" value={clave} onChange={this.handleChangeClave}/>
+            <label htmlFor="formGroupExampleInput4" className="letra">Contraseña: </label>
+            <input type="password" className="form-control" id="formGroupExampleInput4" placeholder="Contraseña" value={clave} onChange={this.handleChangeClave}/>
           </div>
-          <br/>
           <div className="form-group">
-            <label htmlFor="formGroupExampleInput5">Repetir Clave: </label>
-            <input type="password" className="form-control" id="formGroupExampleInput5" placeholder="Repita la clave" value={repetirClave} onChange={this.handleChangeRClave}/>
+            <label htmlFor="formGroupExampleInput5" className="letra">Confirmar contraseña: </label>
+            <input type="password" className="form-control" id="formGroupExampleInput5" placeholder="Confirmar contraseña" value={repetirClave} onChange={this.handleChangeRClave}/>
           </div>
         </form>
         <br/>
         <button type="button" className="btnLis" onClick={this.listo}>Registrarme</button>
-        <button type="button" className="btnLis" onClick={this.back}>Atras</button>
+        <button type="button" className="btnOut" onClick={this.atras}>Atrás</button>
       </div>
       <br/>
       <br/>

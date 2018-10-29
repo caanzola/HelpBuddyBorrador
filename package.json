@@ -16,12 +16,16 @@
     "crypto-js": "^3.1.9-1",
     "crypto.js": "^1.1.5",
     "dotenv": "^6.1.0",
+    "jquery": "^1.9.1",
     "meteor-node-stubs": "^0.4.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-hot-loader": "^4.3.11",
     "react-meteor-data": "^0.2.11",
+    "react-rater": "^5.0.3",
     "react-responsive-carousel": "^3.1.43",
+    "react-star-rating": "^1.4.2",
     "reactstrap": "^6.4.0"
   },
   "meteor": {
@@ -30,5 +34,8 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "@types/gapi.client.gmail": "^1.0.0"
   }
 }

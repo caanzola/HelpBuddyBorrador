@@ -20,8 +20,12 @@ class IniciarSesion extends Component {
     this.handleChangeCorreo=this.handleChangeCorreo.bind(this);
     this.handleChangeClave=this.handleChangeClave.bind(this);
     this.listo=this.listo.bind(this);
+    this.atras=this.atras.bind(this);
   }
 
+ atras(){
+    this.props.atras(true);
+  }
 handleChangeCorreo(event){
   this.setState({correo: event.target.value});
 }
@@ -29,9 +33,6 @@ handleChangeClave(event){
   this.setState({clave: event.target.value});
 }
 
-back(){
-  window.location.reload();
-}
 
 listo(){
   let {
@@ -73,7 +74,7 @@ loged(correo, nickname){
 
   render() {
     const divStyle = {
-    width: "80%",
+    width: "35%",
     margin: "auto",
       borderStyle: "solid",
     borderWidth: "2px",
@@ -97,18 +98,21 @@ let {
         <form>
           <br/>
           <div className="form-group">
-            <label htmlFor="formGroupExampleInput2">Correo: </label>
+            <label htmlFor="formGroupExampleInput2" className="letra">Correo: </label>
             <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="correo@correo.com"value={correo} onChange={this.handleChangeCorreo}/>
           </div>
-          <br/>
           <div className="form-group">
-            <label htmlFor="formGroupExampleInput4">Clave: </label>
-            <input type="password" className="form-control" id="formGroupExampleInput4" placeholder="Clave" value={clave} onChange={this.handleChangeClave}/>
+            <label htmlFor="formGroupExampleInput4" className="letra">Contraseña: </label>
+            <input type="password" className="form-control" id="formGroupExampleInput4" placeholder="Contraseña" value={clave} onChange={this.handleChangeClave}/>
           </div>
         </form>
         <br/>
+        <div className="btnFor">
         <button type="button" className="btnLis" onClick={this.listo}>Entrar</button>
-        <button type="button" className="btnLis" onClick={this.back}>Atras</button>
+         <span> </span>
+        <button type="button" className="btnOut" onClick={this.atras}>Atrás</button>
+        <span> </span>
+        </div>
       </div>
       <br/>
       </div>

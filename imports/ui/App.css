@@ -5,6 +5,23 @@
   margin-left: auto;
   margin-right: auto;
 }
+.btnImg {
+    display: inline-block;
+    height: 70px;
+    margin: auto;
+    border-radius: 15px;
+    width: 70px;
+    background-color: transparent;
+}
+.imgBtn {
+    display: block;
+    height: 55px;
+    width: 55px;
+}
+.listao{
+  display: inline-block;
+  padding: 5px;
+}
 .carta {
   border-radius: 25px;
   border-color: black;
@@ -29,6 +46,9 @@ table {
     margin-right: auto;
     font-size: 15px;
     background-color: #D9D9D9;
+      -webkit-box-shadow: 2px 2px 5px #999;
+  -moz-box-shadow: 2px 2px 5px #999;
+  filter: shadow(color=#999999, direction=135, strength=2);
 }
 th {
     color: #162238;
@@ -88,11 +108,17 @@ th, td {
   z-index: 10;
   float: center;
 }
+.hIem {
+  color:#041527;
+  font-family: 'Concert One', cursive;
+  padding: 5px;
+  overflow: auto;
+  max-height: 50px;
+}
 .carousel .thumb img {
     width: 100% !important;
     height: 100% !important;
 }
-
 .carousel .slide img {
     max-height: 500px;  /* change this to whatever you want */
     width: 700px;
@@ -113,6 +139,14 @@ th, td {
    align-items: center;
 
 }
+.fifty{
+  width: 50%;
+}
+.btnFor{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+ }
 .izq{
   float: left;
   margin-left: 120px;
@@ -129,7 +163,7 @@ th, td {
   height: 45px;
   margin-bottom: 3%;
 }
-.btnOferta{ 
+.btnOferta{
   border-radius: 8px;
   background-color: #00A0D8;
   color: white;
@@ -138,11 +172,38 @@ th, td {
     height: 40px;
     width: 240px;
     font-family: 'Concert One', cursive;
-    font-size: 20px;
+    font-size: 22px;
     margin-right: 8px;
+    float: left;
 }
-.btnReg:hover {
-    background-color: #CFDBE5;
+.btnNueva{
+  border-radius: 8px;
+  background-color: #00A0D8;
+  color: white;
+  -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    height: 40px;
+    width: 180px;
+    font-family: 'Concert One', cursive;
+    font-size: 22px;
+    text-align: center;
+    float: right;
+}
+.btnNueva:hover{
+  background-color: #28D160;
+}
+.btnSelec{
+  border-radius: 8px;
+  background-color: #28D160;
+  color: white;
+  -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    height: 40px;
+    width: 240px;
+    font-family: 'Concert One', cursive;
+    font-size: 22px;
+    margin-right: 8px;
+    float: left;
 }
 .btnReg{
   border-radius: 8px;
@@ -157,29 +218,73 @@ th, td {
     margin-right: 8px;
 }
 .btnReg:hover {
-    background-color: #CFDBE5;
+    background-color: #28D160;
+    color: #fff;
 }
-.btnLis{
-  border-radius: 10px;
-  background-color:#041527;
+.btnCerrarSesion{
+    border-radius: 8px;
+  background-color: white;
+  color: #00A0D8;
+  -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    height: 40px;
+    width: 140px;
+    font-family: 'Concert One', cursive;
+    font-size: 20px;
+    margin-right: 8px;
+}
+.btnCerrarSesion:hover {
+    background-color: #FCAFB8;
+    color: #000;
+}
+.btnNormal{
+  border-radius: 8px;
+  background-color: #00A0D8;
   color: white;
   -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     height: 40px;
-    width: 120px;
+    width: auto;
+}
+.btnNormal:hover {
+    background-color: #CFDBE5;
+}
+.btnLis{
+  border-radius: 10px;
+  background-color:#28D160;
+  color: white;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  font-family: 'Concert One', cursive;
+    transition-duration: 0.4s;
+    height: 40px;
+    width: 190px;
+    font-size: 20px;
+    margin-right: 5px;
 }
 .btnLis:hover {
-    background-color: #00A0D8;
+    background-color: #A2FCBC;
+    color:#000;
+}
+.letra{
+  font-family: 'Concert One', cursive;
+  font-size: 27px;
+  float: left;
+}
+.errorMsg{
+  color:#FA5858;
 }
 .btnOut{
   border-radius: 10px;
-  background-color:#DF0101;
+  background-color:#CE7885;
+  font-family: 'Concert One', cursive;
   color: white;
     height: 40px;
     width: 120px;
+    font-size: 20px;
 }
 .btnOut:hover {
-    background-color: #FA5858;
+    background-color: #FCAFB8;
+    color:#000;
 }
 .alineado{
   display: inline;
@@ -193,6 +298,9 @@ th, td {
 nav {
   float: center;
   text-align: center;
+  -webkit-box-shadow: 2px 2px 5px #999;
+  -moz-box-shadow: 2px 2px 5px #999;
+  filter: shadow(color=#999999, direction=135, strength=2);
 }
 nav ul {
   list-style: none;
@@ -227,7 +335,6 @@ a{
   top: 0;
   color:#fff;
 }
-
 a:hover {
   text-decoration: none;
   color: #fff;
