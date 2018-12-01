@@ -115,7 +115,7 @@ chat(nameMine, nameOther, idOth, idMi)
         name: nameMine
     });
     window.talkSession = new Talk.Session({
-        appId: "tNFc5x6J",
+        appId: "appId",
         me: me
     });
 
