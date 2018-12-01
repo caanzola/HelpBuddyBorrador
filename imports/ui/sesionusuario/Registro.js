@@ -64,8 +64,8 @@ listo(){
     msg=("Se requiere el correo");
     this.setState({error:msg});
     }
-  else if(clave===""){
-    msg=("Se requiere clave");
+  else if(clave==="" || clave.length < 4){
+    msg=("La contraseña debe tener al menos 4 dígitos");
     this.setState({error:msg});
     }
   else if(clave!=repetirClave){
@@ -86,16 +86,22 @@ listo(){
     const ciphertext = CryptoJS.AES.encrypt(clave, sk).toString();
     let search=Meteor.call("usuarios.getCorreo",correo,(err,user)=>{
       if(!user){
-        Meteor.call("usuarios.add",nombre,correo,nickname,ciphertext,(err,res)=>{if(res==="success"){
-          this.loged(correo,nickname);
+
+        let id= Math.random()* (10000-1000) + 1000 ;
+
+        Meteor.call("usuarios.add",id,nombre,correo,nickname,ciphertext,(err,res)=>{if(res==="success"){
+          this.loged(correo,nickname, id);
         }else{
+
+          let id= Math.random()* (10000-1000) + 1000 ;
+
           var randomAnimal = Math.floor(Math.random() * 15);
           var randomNumber = Math.floor(Math.random() * 15);
           var randomAction = Math.floor(Math.random() * 15);
           let nickname =animals[randomAnimal]+numbers[randomNumber]+action[randomAction];
           console.log("Ya existe nickname");
-          Meteor.call("usuarios.add",nombre,correo,nickname,ciphertext,(err,res)=>{if(res==="success"){
-            this.loged(correo,nickname);
+          Meteor.call("usuarios.add",id,nombre,correo,nickname,ciphertext,(err,res)=>{if(res==="success"){
+            this.loged(correo,nickname, id);
           }else{
             var randomAnimal = Math.floor(Math.random() * 15);
             var randomNumber = Math.floor(Math.random() * 15);
@@ -111,8 +117,8 @@ listo(){
     });
   }
 }
-loged(correo,nickname){
-  this.props.loged(true,correo,nickname);
+loged(correo,nickname, id1){
+  this.props.loged(true,correo,nickname, id1);
 }
 renderError(error){
   let err= error;

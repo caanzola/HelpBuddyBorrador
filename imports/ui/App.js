@@ -23,6 +23,7 @@ class App extends Component {
       loggeado:false,
       correo:"",
       nickname:"",
+      id:"",
       solicitarAyuda:false
     };
     this.iniciarSesion = this.iniciarSesion.bind(this);
@@ -85,19 +86,23 @@ renderBtnSesion()
 }
 
 //
-loged(bol,correo,nickname){
-  this.setState({loggeado:true, correo:correo, nickname:nickname});
+loged(bol,correo,nickname, id1){
+  this.setState({loggeado:true, correo:correo, nickname:nickname, id:id1});
+  console.log("id del usuario es ", id1);
 }
 showContent()
 {
   let nickname = this.state.nickname;
+  let correo = this.state.correo;
+  let id = this.state.id;
+
   if(this.state.loggeado)
   {
     return(<div>
       <br/>
       <br/>
       <br/>
-      <TableroSolicitudes nickname={nickname}/>
+      <TableroSolicitudes id={id} nickname={nickname} correo={correo}/>
       </div>);
   }
   else
@@ -141,13 +146,13 @@ showContent()
                   <td>
                   <Carousel autoPlay={true} showThumbs={false} infiniteLoop={true} width={"800px"} transitionTime={1500} interval={7000}>
                     <div>
-                      <img src="/1.jpg" />
+                      <img src="/1.jpg" alt="La oportunidad de encontrar lo que necesitas en un solo lugar" />
                     </div>
                     <div>
-                      <img src="/2.jpg"></img>
+                      <img src="/2.jpg" alt="Helpbuddy es brindar y optener ayuda"></img>
                     </div>
                     <div>
-                      <img src="/3.jpg"></img>
+                      <img src="/3.jpg" alt="Cooperando se avanza"></img>
                     </div>
                   </Carousel>
                   </td>

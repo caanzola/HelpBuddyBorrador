@@ -8,6 +8,9 @@ import '../imports/api/usuarios.js';
 import '../imports/api/solicitudayuda.js';
 import '../imports/api/ofertasAyuda.js';
 import '../imports/api/calificacionAyuda.js';
+import '../imports/api/calificacionOferta.js';
+
 Meteor.startup(() => {
+
   render(<App />, document.getElementById('render-target'));
 });

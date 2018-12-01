@@ -6,6 +6,7 @@ import StarRating from 'react-star-rating'
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from "prop-types";
 import {OfertasAyuda} from '../../api/ofertasAyuda.js';
+import {CalificacionOferta} from '../../api/calificacionOferta.js';
 
 class DetalleOferta extends Component {
   constructor(props) {
@@ -13,166 +14,41 @@ class DetalleOferta extends Component {
     this.state = {
       solicitud:this.props.solicitud,
       nickname: this.props.nickname,
-      cal:3,
+      correo:this.props.correo,
+      cal:0,
+      calificacion:this.props.calificacion,
       auxilio:false,
       asunto:"",
       contenidoCorreo:"",
-      listo:false
+      listo:false,
+      calificaciones: this.props.calificaciones
     };
 
     this.atras = this.atras.bind(this);
+    this.load = this.load.bind(this);
+    this.increaseAnswerScore= this.increaseAnswerScore.bind(this);
+    this.decreaseScore= this.decreaseScore.bind(this);
     this.eliminarOferta = this.eliminarOferta.bind(this);
     this.solicitarAyuda = this.solicitarAyuda.bind(this);
     this.enviar = this.enviar.bind(this);
     this.handleChangeAsunto = this.handleChangeAsunto.bind(this);
     this.handleChangeCorreo = this.handleChangeCorreo.bind(this);
-    this.checkAuth = this.checkAuth.bind(this);
-    this.handleAuthResult = this.handleAuthResult.bind(this);
-    this.loadGmailApi = this.loadGmailApi.bind(this);
-    this.handleAuthClick = this.handleAuthClick.bind(this);
-    this.next = this.next.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.composeTidy = this.composeTidy.bind(this);
+
 //    this.handleRatingClick = this.handleRatingClick.bind(this);
   }
 
   enviar()
   {
 
-    var apiKey = 'AIzaSyCOso3F68HHWFRPbwfifBBZmnhzDAUGu-4';
-    var scopes ='https://www.googleapis.com/auth/gmail.readonly '+
-  'https://www.googleapis.com/auth/gmail.send';
+    var to = this.state.solicitud.correo;
+    console.log("to ", to);
+    var asunto = this.state.asunto;
+    var mensaje = this.state.contenidoCorreo;
+    var pfrom = this.state.correo;
 
-     gapi.client.setApiKey(apiKey);
-     window.setTimeout(this.checkAuth, 1);
-
-     
+    console.log(mensaje);
+    this.atras();
   }
-
-  checkAuth() {
-
-
-
-    var clientId = '1080561387026-859plseu5ln2rbqtbjuhu2u0nke00lrr.apps.googleusercontent.com';
-
-    var scopes ='https://www.googleapis.com/auth/gmail.readonly '+
-  'https://www.googleapis.com/auth/gmail.send';
-
-  gapi.auth.authorize({
-    client_id: clientId,
-    scope: scopes,
-    immediate: true
-  }, this.handleAuthResult(false));
-}
-
-handleAuthResult(authResult) {
-
-if(!this.state.listo){
-  if(authResult) {
-    this.loadGmailApi();
-  } else {
-      this.handleAuthClick();
-  }
-}
-  
-}
-
-loadGmailApi() {
-  gapi.load("client", () => { 
-    // now we can use gapi.client
-    // ... 
-    gapi.client.load('gmail', 'v1', () => {
-    // now we can use gapi.client.gmail
-    // ... 
-    var request = gapi.client.gmail.users.get({
-        'userId': 'me'
-    });
-
-    request.execute(function(response) {
-        console.log(response);
-        
-
-    });
-
-
-    this.next();
-    });
-});
-
-  
-
-  gapi.client.load('plus', 'v1', function() {
-
-    var request = gapi.client.plus.people.get({
-        'userId': 'me'
-    });
-
-    request.execute(function(response) {
-        console.log(response);
-        
-
-    });
-});
-
-
-  this.setState({
-    listo:true
-  });
-
-}
-
-next()
-{
-  
-
-  this.sendMessage(
-    {
-      'To': "milocamilo97@gmail.com",
-      'Subject': "Prueba 1"
-    },
-    "Hola k ase",
-    this.composeTidy()
-  );
-}
-
-sendMessage(headers_obj, message, callback)
-{
-  var email = '';
-
-  for(var header in headers_obj)
-    email += header += ": "+headers_obj[header]+"\r\n";
-
-  email += "\r\n" + message;
-window.setTimeout(4000);
-  var sendRequest = gapi.client.gmail.users.messages.send({
-    'userId': 'me',
-    'resource': {
-      'raw': window.btoa(email).replace(/\+/g, '-').replace(/\//g, '_')
-    }
-  });
-
-  return sendRequest.execute(callback);
-}
-
-composeTidy()
-{
-  this.atras();
-}
-
-handleAuthClick() {
-
-    var clientId = '1080561387026-859plseu5ln2rbqtbjuhu2u0nke00lrr.apps.googleusercontent.com';
-
-    var scopes ='https://www.googleapis.com/auth/gmail.readonly '+
-  'https://www.googleapis.com/auth/gmail.send';
-
-  gapi.auth.authorize({
-    client_id: clientId,
-    scope: scopes,
-    immediate: false
-  }, this.handleAuthResult(true));
-  return false;
-}
 
   handleChangeAsunto(event)
   {
@@ -197,23 +73,27 @@ handleAuthClick() {
 
   eliminarOferta(){
     Meteor.call("ofertasAyuda.eliminarOfertaNombre",this.props.solicitud._id);
-        
+
     this.atras();
   }
-
   renderSolicitud(solicitud){
+    const divStyle = {
+      margin: "auto",
+      textAlign: "center",
+    }
     const center={
         margin: "auto",
         textAlign: "left",
       }
+
     if(solicitud.remunerada){
       return(
-        <h4 className="hIem" style={center}>{"Sí"}</h4>
+        <h4 className="hIem" style={center}>Sí</h4>
       );
     }
     else{
       return(
-        <h4 className="hIem" style={center}>{"No"}</h4>
+        <h4 className="hIem" style={center}>No</h4>
       );
     }
 
@@ -221,17 +101,76 @@ handleAuthClick() {
   atras(){
     this.props.atras(true);
   }
-  handleRatingClick(e, data) {
-    alert('You left a ' + data.rating + ' star rating for ' + data.caption);
-}
-increaseAnswerScore(){
-  console.log("AUMENTAR");
-}
-decreaseScore() {
-  console.log("DISMINUIR");
-}
-  handleRate(rate){
-    console.log(rate);
+  load(){
+
+      if(this.state.cal!=0 || this.state.calificacion != undefined){
+        return null;
+      }
+      else {
+          return (
+            <div>
+            <button className="btnImg" onClick={this.increaseAnswerScore.bind()}><img className="imgBtn" src="/like.svg" alt="like"/></button>
+            <span>   </span>
+              <button className="btnImg" onClick={this.decreaseScore.bind()}><img className="imgBtn" src="/dislike.svg" alt="like"/></button>
+            </div>
+          );
+      }
+
+  }
+  increaseAnswerScore(){
+    let cali = 1;
+    Meteor.call("calificacionesoferta.add",this.state.solicitud._id,this.state.nickname,cali,(err, res)=>{
+      if(err){
+        console.log(err);
+      }
+      else {
+        alert("Gracias, tu calificación ha sido guardada");
+        this.atras();
+      }
+    });
+  }
+  decreaseScore() {
+    let cali = -1;
+    Meteor.call("calificacionesoferta.add",this.state.solicitud._id,this.state.nickname,cali,(err, res)=>{
+      if(err){
+        console.log(err);
+      }
+      else {
+        alert("Gracias, tu calificación ha sido guardada");
+        this.atras();
+      }
+    });
+  }
+  renderCalificacion(calificaciones){
+    const centerTitle={
+      margin: "auto",
+      textAlign: "left",
+      color:"#00A0D8",
+    }
+    const red ={
+      color:"#CE7885",
+    }
+
+    const green ={
+      color:"#28D160",
+    }
+
+    let cal =0
+
+    calificaciones.map((calificacion)=>{
+      console.log(calificacion.puntos);
+      cal+= parseInt(calificacion.puntos);
+    });
+    if(cal>=0){
+      return (
+        <h4 className="hIem" style={centerTitle}>Calificación: <span style={green}>{cal}</span></h4>
+      );
+    }
+    else{
+    return (
+        <h4 className="hIem" style={centerTitle}>Calificación:<span style={red}>{cal}</span></h4>
+    );
+    }
   }
     render() {
       let cal = this.state.cal;
@@ -285,22 +224,22 @@ decreaseScore() {
         <div style={divStyle}>
       <div style={w}>
       <br/>
-      
+
       <br/>
         <form>
-        <h4>Envía un email a {this.state.nickname} para solicitar su ayuda</h4>
+        <h4>Envía un email a {this.state.solicitud.nickname} para solicitar su ayuda</h4>
           <div className="form-group">
             <label htmlFor="formGroupExampleInput" className="letra">Asunto: </label>
             <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Asunto" onChange={this.handleChangeAsunto}/>
           </div>
           <div className="form-group">
             <label htmlFor="formGroupExampleInput2" className="letra">Body: </label>
-            <textarea className="form-control" rows="4" id="formGroupExampleInput2" placeholder="Redacta el contenido del correo"/>
+            <textarea className="form-control" rows="4" id="formGroupExampleInput2" placeholder="Redacta el contenido del correo" onChange={this.handleChangeCorreo}/>
           </div>
         <br/>
         </form>
         <button type="button" className="btnLis" onClick={this.enviar}>Enviar</button>
-        <button type="button" className="btnOut" onClick={this.atras}>Atras</button>
+        <button type="button" className="btnOut" onClick={this.atras}>Atrás</button>
       </div>
       <br/>
       <br/>
@@ -315,6 +254,8 @@ decreaseScore() {
       <br/>
       <h2 className="hIem" style={centerTitle}>Usuario que ofrece la ayuda: </h2>
         <h2 className="hIem" style={center}>{solicitud.nickname}</h2>
+        <h3 className="hIem" style={centerTitle}>Correo de contacto: </h3>
+      <h3 className="hIem" style={center}>{solicitud.correo}</h3>
       <h3 className="hIem" style={centerTitle}>Título de la oferta: </h3>
       <h3 className="hIem" style={center}>{solicitud.nombreOferta}</h3>
       <h3 className="hIem" style={centerTitle}>Descripcion: </h3>
@@ -325,6 +266,7 @@ decreaseScore() {
       {this.renderSolicitud(solicitud)}
       <h3 className="hIem" style={centerTitle}>Entidad: </h3>
       <h3 className="hIem" style={center}>{solicitud.entidad}</h3>
+      {this.renderCalificacion(this.props.calificaciones)}
       <br/>
       <br/>
       <br/>
@@ -346,6 +288,8 @@ decreaseScore() {
       <br/>
       <h2 className="hIem" style={centerTitle}>Usuario que ofrece la ayuda: </h2>
         <h2 className="hIem" style={center}>{solicitud.nickname}</h2>
+        <h3 className="hIem" style={centerTitle}>Correo de contacto: </h3>
+      <h3 className="hIem" style={center}>{solicitud.correo}</h3>
       <h3 className="hIem" style={centerTitle}>Título de la oferta: </h3>
       <h3 className="hIem" style={center}>{solicitud.nombreOferta}</h3>
       <h3 className="hIem" style={centerTitle}>Descripcion: </h3>
@@ -356,12 +300,10 @@ decreaseScore() {
       {this.renderSolicitud(solicitud)}
       <h3 className="hIem" style={centerTitle}>Entidad: </h3>
       <h3 className="hIem" style={center}>{solicitud.entidad}</h3>
+      {this.renderCalificacion(this.props.calificaciones)}
       <br/>
       <br/>
-      <button className="btnImg" onClick={this.increaseAnswerScore.bind()}><img className="imgBtn" src="/like.svg" alt="like"/></button>
-      <span>   </span>
-        <button className="btnImg" onClick={this.decreaseScore.bind()}><img className="imgBtn" src="/dislike.svg" alt="like"/></button>
-      <br/>
+      {this.load()}
       <br/>
       <br/>
       <button type="button" className="btnLis" onClick={this.solicitarAyuda}>Solicitar ayuda</button>

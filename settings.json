@@ -1,7 +1,8 @@
 {
   "public": {
     "stripe": {
-      "p_key": "pk_test_22r23a...fa3n"
+      "p_key": "pk_test_22r23a...fa3n",
+      "mail__url": "smtp://postmaster@sandbox5d645043d7d8479da382c8659d352a86.mailgun.org:d8f4eb41843381d37b0931d1eaf3a7b7-c9270c97-a9941b57"
    }
   },
   "stripe": {

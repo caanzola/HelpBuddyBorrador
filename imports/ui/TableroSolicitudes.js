@@ -20,14 +20,19 @@ class TableroSolicitudes extends Component {
 	    this.state = {
 				nuevaOfertaAyuda:false,
 				nuevaSolicitudAyuda:false,
+				id:this.props.id,
 				nickname:this.props.nickname,
+				correo:this.props.correo,
 				idSolAyuda:"",
 				idOfertaAyuda:"",
 				solAyuda:"",
 				ofertaAyuda:"",
 				solicitudes:true,
 				ofertas:false,
-				calAyuda:""
+				calAyuda:"",
+				calOferta:"",
+				calificaciones:[],
+				calificacionesO:[],
 	    };
 
 	    this.publicarOfertaAyuda = this.publicarOfertaAyuda.bind(this);
@@ -42,10 +47,18 @@ class TableroSolicitudes extends Component {
 	atras(atras){
 		this.setState({nuevaOfertaAyuda:false,nuevaSolicitudAyuda:false,idSolAyuda:"",solAyuda:"", ofertaAyuda:"", idOfertaAyuda:""});
 	}
-	verDetalle(id, resp){
-		console.log(resp);
-		this.setState({idSolAyuda:id, calAyuda:resp});
-		console.log(this.state.nickname+" LLEGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+	verDetalle(id){
+		this.setState({idSolAyuda:id});
+		Meteor.call('calificacionesAyuda.getSol', id, (err, res)=>{
+			if(err){
+				console.log("error");
+			}
+			else {
+				this.setState({calificaciones:res});
+			console.log("Listado de calificaciones"+JSON.stringify(res));
+			}
+		});
+
 		Meteor.call('calificacionesAyuda.get', id, this.state.nickname , (err, res)=>{
 			if(err){
 				console.log("error");
@@ -57,13 +70,32 @@ class TableroSolicitudes extends Component {
 		Meteor.call("solicitudayuda.getAyudaID",id,(err,res)=>{if(res){
 			this.setState({solAyuda:res,nuevaSolicitudAyuda:false, nuevaOfertaAyuda:false, ofertaAyuda:""});
 			}else{
-				alert("Error");
+				alert("Error tal vez no tiene id esa solicitud y es vieja, refresque la página");
 			}
 		});
+
 	}
 	verDetalleOferta(id)
 	{
 		this.setState({idOfertaAyuda:id});
+		Meteor.call('calificacionesoferta.getSol', id, (err, res)=>{
+			if(err){
+				console.log("error");
+			}
+			else {
+				this.setState({calificacionesO:res});
+			console.log("Listado de calificaciones"+JSON.stringify(res));
+			}
+		});
+
+		Meteor.call('calificacionesoferta.get', id, this.state.nickname , (err, res)=>{
+			if(err){
+				console.log("error");
+			}
+			else {
+			this.setState({calOferta:res});
+			}
+		});
 		Meteor.call("ofertasAyuda.getOfertaID",id,(err,res)=>{if(res){
 			this.setState({ofertaAyuda:res,nuevaSolicitudAyuda:false, nuevaOfertaAyuda:false, solAyuda:""},()=>{
 
@@ -131,22 +163,22 @@ class TableroSolicitudes extends Component {
 		if(this.state.nuevaSolicitudAyuda)
 		{
 			return (
-				<SolicitudA nickname={this.state.nickname} atras={this.atras}/>
+				<SolicitudA id={this.state.id} nickname={this.state.nickname} correo={this.state.correo} atras={this.atras}/>
 			);
 		}
 		else if(this.state.nuevaOfertaAyuda)
 		{
 			return (
-				<OfertaA nickname={this.state.nickname} atras={this.atras}/>
+				<OfertaA nickname={this.state.nickname} correo={this.state.correo} atras={this.atras}/>
 			);
 		}
 		else if(this.state.solAyuda){
 			//ver detalle
-			return(<DetalleAyuda solicitud={this.state.solAyuda} nickname={this.state.nickname} calificacion={this.state.calAyuda} atras={this.atras}/>);
+			return(<DetalleAyuda solicitud={this.state.solAyuda} id={this.state.id} nickname={this.state.nickname} calificaciones={this.state.calificaciones} calificacion={this.state.calAyuda} atras={this.atras}/>);
 		}
 		else if(this.state.ofertaAyuda){
 			//ver detalle
-			return(<DetalleOferta solicitud={this.state.ofertaAyuda} nickname={this.state.nickname} atras={this.atras}/>);
+			return(<DetalleOferta solicitud={this.state.ofertaAyuda} calificaciones={this.state.calificacionesO} calificacion={this.state.calOferta} correo={this.state.correo} nickname={this.state.nickname} atras={this.atras}/>);
 		}
 		else {
 			return(

@@ -12,13 +12,13 @@ if(Meteor.isServer)
 
 Meteor.methods(
 {
-	"usuarios.add":function(nombre,correo,nickname,claveHash){
+	"usuarios.add":function(id1, nombre,correo,nickname,claveHash){
 		const usuario = Usuarios.findOne({
     	$or:[{correo:correo}, {nickname:nickname}]
 	  });
 	  if(!usuario)
 	  {
-	      Usuarios.insert({nombre:nombre,correo:correo,nickname:nickname,claveHash:claveHash});
+	      Usuarios.insert({id:id1,nombre:nombre,correo:correo,nickname:nickname,claveHash:claveHash});
 				return "success";
 	  }
 	  else
@@ -29,7 +29,18 @@ Meteor.methods(
 	"usuarios.getUser":function(correo){
 		let mail = correo.toString();
 		const usuario = Usuarios.findOne({ correo: correo});
-	  return usuario;
+		if(!usuario.id)
+		{
+			console.log("No tiene id");
+			Usuarios.remove(usuario);
+			return null;
+		}
+		else
+		{
+			return usuario;
+		}
+	  
+		
 	},
 	"usuarios.getNickName":function(nickname){
 		const usuario = Usuarios.findOne({

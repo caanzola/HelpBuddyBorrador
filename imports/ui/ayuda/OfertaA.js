@@ -11,6 +11,7 @@ class OfertaA extends Component {
     super(props);
     this.state = {
       nickname:this.props.nickname,
+      correo: this.props.correo,
       nombreOferta:"",
       descripcion:"",
       tipo:"",
@@ -31,8 +32,8 @@ class OfertaA extends Component {
 
   publicar()
   {
-
-    Meteor.call("ofertasA.add", this.state.nickname, this.state.nombreOferta, this.state.descripcion, this.state.tipo,
+    console.log("Correo que publica: ", this.state.correo);
+    Meteor.call("ofertasA.add", this.state.nickname, this.state.correo, this.state.nombreOferta, this.state.descripcion, this.state.tipo,
       this.state.remunerada, this.state.entidad, (err, resultado)=>{
         if(resultado)
         {
@@ -78,7 +79,7 @@ class OfertaA extends Component {
         margin: "auto",
       }
       let {
-        nickname, nombreOferta, descripcion, tipo, fechaLimite, entidad,remunn
+        nickname, email, nombreOferta, descripcion, tipo, fechaLimite, entidad,remunn
       }=this.state;
 
       return (

@@ -55,7 +55,7 @@ listo(){
       var bytes  = CryptoJS.AES.decrypt(use.claveHash, sk);
       const originalText = bytes.toString(CryptoJS.enc.Utf8);
       if(originalText===clave){
-        this.loged(correo,use.nickname);
+        this.loged(correo,use.nickname, use.id);
       }
       else{
         alert("Credenciales Invalidas");
@@ -68,8 +68,8 @@ listo(){
 
   }
 }
-loged(correo, nickname){
-  this.props.loged(true,correo,nickname);
+loged(correo, nickname, id1){
+  this.props.loged(true,correo,nickname, id1);
 }
 
   render() {
